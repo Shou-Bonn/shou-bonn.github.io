@@ -1,0 +1,401 @@
+:root {
+    --background-color: #010010;
+    --container-bg: rgba(10, 15, 30, 0.85);
+    --main-text-color: #e0e0e0;
+    --header-color: #ffffff;
+    --accent-color-1: #6c8cff;
+    --accent-color-2: #a87ffb;
+    --border-color: rgba(108, 140, 255, 0.4);
+    --border-glow-color: rgba(108, 140, 255, 0.6);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--main-text-color);
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    position: relative;
+    cursor: auto;
+}
+
+#starfield, #fast-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+#fast-particles {
+    z-index: 2;
+}
+
+/* Cover Page */
+#cover-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+    text-align: center;
+    color: white;
+    transition: opacity 1s ease-out 0.5s;
+}
+
+#cover-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    cursor: grab;
+}
+
+#cover-canvas:active {
+    cursor: grabbing;
+}
+
+#cover-page h1, #cover-page h2, #cover-page button {
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+#cover-page.loaded h1 { opacity: 1; transform: translateY(0); transition-delay: 0.5s; }
+#cover-page.loaded h2 { opacity: 1; transform: translateY(0); transition-delay: 1.3s; }
+#cover-page.loaded button { opacity: 1; transform: translateY(0); transition-delay: 2.1s; }
+
+
+#cover-page h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 4rem;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+}
+
+#cover-page h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 300;
+    font-size: 1.5rem;
+    margin-top: 10px;
+    margin-bottom: 40px;
+    animation: tracking-in-expand 1s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
+}
+
+@keyframes tracking-in-expand {
+  0% { letter-spacing: -0.5em; opacity: 0; }
+  40% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+#enter-button {
+    font-family: 'Orbitron', sans-serif;
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: pulse-glow 3s infinite ease-in-out;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 15px rgba(255, 255, 255, 0.3); }
+    50% { box-shadow: 0 0 25px rgba(255, 255, 255, 0.7); }
+}
+
+#enter-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    animation-play-state: paused;
+}
+
+.container {
+    width: 95%;
+    max-width: 1400px;
+    height: 90vh;
+    padding: 30px;
+    overflow-y: auto;
+    position: relative;
+    z-index: 100;
+    background: var(--container-bg);
+    backdrop-filter: blur(5px);
+    display: none;
+    flex-direction: column;
+    opacity: 0;
+    transition: opacity 1s ease-in;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 0 25px var(--border-glow-color);
+    cursor: auto;
+}
+
+.container::-webkit-scrollbar { width: 10px; }
+.container::-webkit-scrollbar-track { background: var(--background-color); }
+.container::-webkit-scrollbar-thumb { background-color: var(--accent-color-1); border-radius: 5px; border: 2px solid var(--background-color); }
+
+header {
+    text-align: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 20px;
+}
+
+header h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5em;
+    color: var(--header-color);
+    margin-bottom: 5px;
+    animation: text-flicker 4s linear infinite;
+}
+
+@keyframes text-flicker {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff, 0 0 40px var(--accent-color-1), 0 0 80px var(--accent-color-1); }
+    20%, 24%, 55% { text-shadow: none; }
+}
+
+header h2 { 
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2em; 
+    color: var(--accent-color-2); 
+    font-weight: 400; 
+    animation: focus-in 1.2s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
+}
+
+@keyframes focus-in {
+  0% { filter: blur(12px); opacity: 0; }
+  100% { filter: blur(0px); opacity: 1; }
+}
+
+nav { text-align: center; margin-bottom: 30px; }
+
+nav a {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--main-text-color);
+    text-decoration: none;
+    margin: 0 12px;
+    font-size: 1em;
+    padding: 8px 12px;
+    position: relative;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+nav a::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 0; height: 2px; background-color: var(--accent-color-2); transition: width 0.3s ease; }
+nav a:hover::after, nav a.active::after { width: 100%; }
+nav a:hover, nav a.active { color: var(--header-color); text-shadow: 0 0 8px var(--accent-color-2); }
+
+main { flex-grow: 1; }
+
+.content-section { display: none; }
+.content-section.active { display: block; }
+
+.content-section h3 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--accent-color-1);
+    margin-bottom: 20px;
+    font-size: 1.6em;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+.content-section.active h3 {
+    animation: typing-reveal 1s steps(30) forwards;
+}
+
+@keyframes typing-reveal {
+    from { clip-path: inset(0 100% 0 0); }
+    to { clip-path: inset(0 0 0 0); }
+}
+
+.content-section h4 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--accent-color-2);
+    margin-top: 25px;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    position: relative;
+}
+
+.content-section.active h4 {
+    animation: glitch 1s linear forwards;
+}
+
+@keyframes glitch{
+  0%, 20%, 24%, 60%, 64%, 100% { transform: none; opacity: 1; }
+  22% { transform: skew(-0.5deg, -0.9deg); opacity: 0.75; }
+  62% { transform: skew(0.8deg, 0.2deg); opacity: 0.5; }
+}
+
+.about-container { display: flex; gap: 20px; align-items: flex-start; }
+.about-text { flex: 3; }
+.profile-pic-container { flex: 1; min-width: 150px; }
+
+.profile-pic {
+    width: 100%;
+    padding-top: 100%;
+    border-radius: 50%;
+    border: 2px solid var(--accent-color-1);
+    box-shadow: 0 0 20px var(--border-glow-color);
+    background-image: url('https://images.unsplash.com/photo-1545156521-8be1b29d4342?q=80&w=1974&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+}
+
+.content-section p, .content-section ul {
+    font-family: 'Share Tech Mono', monospace;
+    line-height: 1.7;
+    margin-bottom: 15px;
+}
+
+.content-section ul { list-style-type: none; padding-left: 5px; }
+.content-section ul li { padding-left: 25px; position: relative; margin-bottom: 8px; transition: all 0.2s ease; }
+.content-section ul li:hover { color: var(--header-color); transform: translateX(5px); }
+
+.content-section ul li::before {
+    content: '';
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236c8cff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 12px;
+    height: 12px;
+    position: absolute;
+    left: 0;
+    top: 6px;
+    transition: all 0.2s ease;
+}
+.content-section ul li:hover::before { filter: drop-shadow(0 0 5px var(--header-color)); transform: rotate(360deg); }
+
+.content-section a { color: var(--accent-color-2); text-decoration: none; font-weight: 400; transition: color 0.3s; cursor: pointer; }
+.content-section a:hover { color: var(--header-color); text-decoration: underline; }
+
+.animated-item {
+    opacity: 0;
+    animation: fade-in-up 0.5s ease-out forwards;
+}
+
+@keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Tooltip */
+.scannable {
+    color: var(--accent-color-2);
+    font-weight: bold;
+    position: relative;
+    cursor: help;
+}
+
+#scan-tooltip {
+    position: fixed;
+    background: var(--container-bg);
+    border: 1px solid var(--border-color);
+    padding: 10px 15px;
+    border-radius: 5px;
+    pointer-events: none;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9em;
+    max-width: 250px;
+}
+
+/* Research Log Grid */
+#research-grid-view {
+    transition: opacity 0.3s ease-out;
+}
+.research-split-screen {
+    display: flex;
+    height: 70vh; /* Give it a fixed height */
+    width: 100%;
+    gap: 5px;
+}
+.research-panel {
+    flex: 1;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: flex 0.7s cubic-bezier(0.165, 0.84, 0.44, 1);
+    cursor: pointer;
+}
+.research-panel:hover {
+    flex: 3;
+}
+.research-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 50%);
+    transition: background 0.5s ease;
+}
+.research-panel:hover::before {
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 50%);
+}
+.panel-content {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+    z-index: 2;
+    transition: all 0.5s ease;
+    transform: translateY(10px);
+    opacity: 0;
+}
+.research-panel:hover .panel-content {
+    transform: translateY(0);
+    opacity: 1;
+}
+.panel-content h5 {
+    font-family: 'Orbitron';
+    font-size: 1.5em;
+    text-shadow: 2px 2px 4px black;
+}
+.panel-content .institution {
+    font-family: 'Share Tech Mono';
+}
+
+.research-detail-view {
+    display: none;
+    padding: 20px;
+    animation: fade-in-up 0.5s ease-out forwards;
+}
+.back-button {
+    font-family: 'Orbitron';
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.back-button:hover {
+    background: white;
+    color: var(--background-color);
+}
