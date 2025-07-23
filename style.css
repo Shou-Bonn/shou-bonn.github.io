@@ -332,18 +332,26 @@ main { flex-grow: 1; }
     gap: 5px;
 }
 .research-panel {
-    flex: 1;
-    position: relative;
-    background-size: cover;
-    background-position: center;
-    border-radius: 5px;
-    overflow: hidden;
-    transition: flex 0.7s cubic-bezier(0.165, 0.84, 0.44, 1);
-    cursor: pointer;
+  /* split flex shorthand into longhands: */
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: pointer;
+
+  /* animate only the grow factor */
+  transition: flex-grow 0.7s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
+
 .research-panel:hover {
-    flex: 3;
+  /* now only the grow factor changes */
+  flex-grow: 3;
 }
+
 .research-panel::before {
     content: '';
     position: absolute;

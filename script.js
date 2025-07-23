@@ -98,7 +98,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let stars; // Make stars accessible for the transition
 
     // --- 3D COVER PAGE ANIMATION ---
-    // Only run this animation if the cover page exists on the current page
     if (coverPage) {
         function initCoverAnimation() {
             const scene = new THREE.Scene();
@@ -228,6 +227,18 @@ document.addEventListener('DOMContentLoaded', function() {
         initCoverAnimation();
     }
 
+    function animateContent(section) {
+        const itemsToAnimate = section.querySelectorAll('p, li, h4, .research-panel');
+        itemsToAnimate.forEach((item, index) => {
+            item.style.animation = 'none';
+            void item.offsetWidth; // Trigger reflow
+            if(item.tagName === 'H4') {
+                 item.style.animation = `glitch 1s linear forwards ${index * 0.05}s`;
+            } else {
+                item.style.animation = `fade-in-up 0.5s ease-out forwards ${index * 0.05}s`;
+            }
+        });
+    }
 
     // --- GENERAL PAGE LOGIC ---
     if (coverPage && enterButton) {
@@ -256,7 +267,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.body.classList.add('site-entered');
                     setTimeout(() => { 
                         mainContainer.style.opacity = '1'; 
-                        // Animate content if it's the main page
                         const activeSection = document.querySelector('.content-section.active');
                         if (activeSection) animateContent(activeSection);
                     }, 50);
@@ -266,12 +276,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- BACKGROUND & SCANNER ANIMATION (RUNS ON ALL PAGES) ---
+    // --- BACKGROUND & SCANNER ANIMATION ---
     const mainStarfieldCanvas = document.getElementById('starfield');
     const fastParticlesCanvas = document.getElementById('fast-particles');
     const tooltip = document.getElementById('scan-tooltip');
     
-    // Ensure canvases exist before trying to get context
     if (mainStarfieldCanvas && fastParticlesCanvas) {
         const mainStarfieldCtx = mainStarfieldCanvas.getContext('2d');
         const fastParticlesCtx = fastParticlesCanvas.getContext('2d');
@@ -306,9 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         function animateStarfields() {
-            // Only animate if the main container or research page is visible
-            if (document.body.classList.contains('site-entered') || document.querySelector('.research-detail-page')) {
-                // Draw static stars
+            if (document.body.classList.contains('site-entered')) {
                 mainStarfieldCtx.clearRect(0, 0, mainStarfieldCanvas.width, mainStarfieldCanvas.height);
                 const offsetX = (mousePos.x - mainStarfieldCanvas.width / 2) / 40;
                 const offsetY = (mousePos.y - mainStarfieldCanvas.height / 2) / 40;
@@ -321,7 +328,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     mainStarfieldCtx.fill();
                 });
 
-                // Draw fast particles
                 fastParticlesCtx.clearRect(0, 0, fastParticlesCanvas.width, fastParticlesCanvas.height);
                 fastParticlesCtx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
                 fastParticles.forEach(p => {
@@ -355,35 +361,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- NAVIGATION AND CONTENT ANIMATION SCRIPT (for main page) ---
+    // --- NAVIGATION AND CONTENT ANIMATION SCRIPT ---
     const navLinks = document.querySelectorAll('.nav-link');
     const contentSections = document.querySelectorAll('.content-section');
     
-    // This function animates content when a section becomes active
-    function animateContent(section) {
-        const itemsToAnimate = section.querySelectorAll('p, li, h4, .research-panel');
-        itemsToAnimate.forEach((item, index) => {
-            item.style.animation = 'none';
-            void item.offsetWidth; // Trigger reflow
-            if(item.tagName === 'H4') {
-                 item.style.animation = `glitch 1s linear forwards ${index * 0.05}s`;
-            } else {
-                item.style.animation = `fade-in-up 0.5s ease-out forwards ${index * 0.05}s`;
-            }
-        });
-    }
-
-    // Handle main navigation clicks
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
-            // If the link is to another page, let it navigate normally
             if (link.getAttribute('href').includes('.html')) return;
             
             e.preventDefault();
             const targetId = link.getAttribute('href').substring(1);
             const targetSection = document.getElementById(targetId);
 
-            // Don't do anything if the section is already active
             if (!targetSection || targetSection.classList.contains('active')) return;
             
             navLinks.forEach(navLink => navLink.classList.remove('active'));
@@ -396,7 +385,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // On page load, check for a URL hash and activate the corresponding section
     const hash = window.location.hash;
     if (hash) {
         const targetLink = document.querySelector(`.nav-link[href="${hash}"]`);
@@ -404,4 +392,23 @@ document.addEventListener('DOMContentLoaded', function() {
             targetLink.click();
         }
     }
+
+    // This makes “Return to Log” (with href="#research") go straight to your logs view.
+    if (window.location.hash === '#research') {
+        // Hide the cover immediately
+        coverPage.style.display = 'none';
+        if (typeof coverAnimationId !== 'undefined') cancelAnimationFrame(coverAnimationId);
+
+        // Show the main research-logs container
+        mainContainer.style.display = 'flex';
+        document.body.classList.add('site-entered');
+
+        // Fade in the active section
+        setTimeout(() => {
+            mainContainer.style.opacity = '1';
+            const activeSection = document.querySelector('.content-section.active');
+            if (activeSection) animateContent(activeSection);
+        }, 50);
+    }
+
 });
