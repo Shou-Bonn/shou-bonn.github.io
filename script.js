@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function animateContent(section) {
-        const itemsToAnimate = section.querySelectorAll('p, li, h4, .research-panel');
+        const itemsToAnimate = section.querySelectorAll('p, li, h4');
         itemsToAnimate.forEach((item, index) => {
             item.style.animation = 'none';
             void item.offsetWidth; // Trigger reflow
@@ -360,6 +360,13 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    document.querySelectorAll('.research-panel').forEach(panel => {
+        panel.addEventListener('click', () => {
+            // Get the link from the data-href attribute and go to that page
+            window.location.href = panel.dataset.href;
+        });
+    });
 
     // --- NAVIGATION AND CONTENT ANIMATION SCRIPT ---
     const navLinks = document.querySelectorAll('.nav-link');

@@ -332,24 +332,17 @@ main { flex-grow: 1; }
     gap: 5px;
 }
 .research-panel {
-  /* split flex shorthand into longhands: */
-  flex-grow: 1;
-  flex-shrink: 1;
-  flex-basis: 0;
-  position: relative;
-  background-size: cover;
-  background-position: center;
-  border-radius: 5px;
-  overflow: hidden;
-  cursor: pointer;
-
-  /* animate only the grow factor */
-  transition: flex-grow 0.7s cubic-bezier(0.165, 0.84, 0.44, 1);
+    flex: 1;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: flex 4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    cursor: pointer;
 }
-
 .research-panel:hover {
-  /* now only the grow factor changes */
-  flex-grow: 3;
+    flex: 3;
 }
 
 .research-panel::before {
@@ -365,6 +358,7 @@ main { flex-grow: 1; }
 .research-panel:hover::before {
     background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 50%);
 }
+
 .panel-content {
     position: absolute;
     bottom: 20px;
